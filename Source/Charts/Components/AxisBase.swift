@@ -21,6 +21,12 @@ open class AxisBase: ComponentBase
         super.init()
     }
     
+    public struct Zone {
+        public var startY: CGFloat = 0
+        public var endY: CGFloat = 0
+        public var color: UIColor = UIColor.white
+    }
+    
     /// Custom formatter that is used instead of the auto-formatter if set
     fileprivate var _axisValueFormatter: IAxisValueFormatter?
     
@@ -38,6 +44,8 @@ open class AxisBase: ComponentBase
     open var gridLineDashLengths: [CGFloat]!
     open var gridLineCap = CGLineCap.butt
     
+    open var zones: [Zone] = []
+    open var drawZonesEnabled = false
     open var drawGridLinesEnabled = true
     open var drawAxisLineEnabled = true
     
@@ -374,4 +382,20 @@ open class AxisBase: ComponentBase
         // actual range
         axisRange = abs(max - min)
     }
+    
+    
+    /**
+     * Draw rectangle with color
+     */
+    
+    open func addZone(startY: CGFloat, endY: CGFloat, color: UIColor) {
+        
+        var zone = Zone()
+        zone.startY = startY
+        zone.endY = endY
+        zone.color = color
+        zones.append(zone)
+        
+    }
+    
 }

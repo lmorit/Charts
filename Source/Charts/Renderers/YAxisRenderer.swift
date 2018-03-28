@@ -157,6 +157,44 @@ open class YAxisRenderer: AxisRendererBase
         }
     }
     
+    open func drawZones(context: CGContext)
+    {
+        
+        guard let
+            yAxis = self.axis as? YAxis
+            else { return }
+        
+        if !yAxis.isEnabled
+        {
+            return
+        }
+        
+        if yAxis.drawZonesEnabled
+        {
+            
+            if
+                let transformer = self.transformer,
+                let zones = self.axis?.zones
+            
+            {
+                
+                for zone in zones {
+                    
+                    var startPoint = CGPoint(x: 0, y: zone.startY)
+                    var endPoint = CGPoint(x: 0, y: zone.endY)
+                    
+                    transformer.pointValueToPixel(&startPoint)
+                    transformer.pointValueToPixel(&endPoint)
+                    
+                    drawZone(context: context, startY: startPoint, endY: endPoint, color: zone.color.cgColor)
+                    
+                }
+                
+            }
+        }
+        
+    }
+    
     open override func renderGridLines(context: CGContext)
     {
         guard let
@@ -228,6 +266,27 @@ open class YAxisRenderer: AxisRendererBase
         context.strokePath()
     }
     
+    open func drawZone(
+        context: CGContext,
+        startY: CGPoint,
+        endY: CGPoint,
+        color: CGColor)
+    {
+        guard
+            let viewPortHandler = self.viewPortHandler
+            else { return }
+        
+        context.beginPath()
+        context.move(to: CGPoint(x: viewPortHandler.contentLeft, y: startY.y))
+        context.addLine(to: CGPoint(x: viewPortHandler.contentRight, y: startY.y))
+        context.addLine(to: CGPoint(x: viewPortHandler.contentRight, y: endY.y))
+        context.addLine(to: CGPoint(x: viewPortHandler.contentLeft, y: endY.y))
+        context.addLine(to: CGPoint(x: viewPortHandler.contentLeft, y: startY.y))
+        context.setFillColor(color)
+        context.fillPath()
+//        context.strokePath()
+    }
+    
     open func transformedPositions() -> [CGPoint]
     {
         guard
@@ -249,6 +308,7 @@ open class YAxisRenderer: AxisRendererBase
         
         return positions
     }
+
 
     /// Draws the zero line at the specified position.
     open func drawZeroLine(context: CGContext)
