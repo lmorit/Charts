@@ -262,9 +262,7 @@ open class YAxisRenderer: AxisRendererBase
         endY: CGPoint,
         color: CGColor)
     {
-        guard
-            let viewPortHandler = self.viewPortHandler
-            else { return }
+        let viewPortHandler = self.viewPortHandler
         
         context.beginPath()
         context.move(to: CGPoint(x: viewPortHandler.contentLeft, y: startY.y))
